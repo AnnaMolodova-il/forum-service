@@ -1,24 +1,26 @@
-import { Router } from 'express';
-import * as controller from '../controllers/post.controller.js';
+import {Router} from 'express';
+import {
+    createPost,
+    getPostById,
+    deletePost,
+    updatePost,
+    addComment,
+    addLike,
+    getPostsByTags,
+    getPostsByPeriod,
+    getPostsByAuthor,
+} from '../controllers/post.controller.js';
 
 const router = Router();
 
-router.post('/post/:user', controller.createPost);
-
-router.get('/post/:postId', controller.getPostById);
-
-router.patch('/post/:postId/like', controller.addLike);
-
-router.get('/posts/author/:user', controller.getPostsByAuthor);
-
-router.patch('/post/:postId/comment/:commenter', controller.addComment);
-
-router.delete('/post/:postId', controller.deletePost);
-
-router.get('/posts/tags', controller.getPostsByTags);
-
-router.get('/posts/period', controller.getPostsByPeriod);
-
-router.patch('/post/:postId', controller.updatePost);
+router.post('/post/:author', createPost);
+router.get('/post/:id', getPostById);
+router.delete('/post/:id', deletePost);
+router.patch('/post/:id/like', addLike);
+router.get('/posts/author/:author', getPostsByAuthor);
+router.patch('/post/:id/comment/:commenter', addComment);
+router.get('/posts/tags', getPostsByTags);
+router.get('/posts/period', getPostsByPeriod);
+router.patch('/post/:id', updatePost);
 
 export default router;
