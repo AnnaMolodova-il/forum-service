@@ -1,5 +1,5 @@
 import {Schema, model} from 'mongoose';
-import {USER, MODERATOR, ADMIN} from '../configuration/constants.js';
+import {USER} from "../configuration/constants.js";
 
 const userAccountSchema = new Schema({
     _id: {
@@ -7,10 +7,10 @@ const userAccountSchema = new Schema({
         required: true,
         alias: 'login'
     },
-    // TODO Create userAccountSchema for Mongoose
     password: {
         type: String,
-        required: true
+        required: true,
+        select: false
     },
     firstName: {
         type: String,
@@ -22,9 +22,17 @@ const userAccountSchema = new Schema({
     },
     roles: {
         type: [String],
-        enum: [USER, MODERATOR, ADMIN],
         default: [USER]
+    }
+}, {
+    versionKey: false,
+    toJSON: {
+        transform: (doc, ret) => {
+            ret.login = doc._id;
+            delete ret._id;
+            delete ret.password;
+        }
     }
 });
 
-export default model('UserAccount', userAccountSchema, 'users');
+export default model('UserAccount', userAccountSchema, "users");
