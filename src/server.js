@@ -4,10 +4,12 @@ import userRoutes from "./routes/userAccount.routes.js";
 import mongoose from "mongoose";
 import config from "./configuration/config.js";
 import errorHandler from "./middlewares/error.middleware.js";
+import authentication from "./middlewares/authentication.middleware.js";
 
 const app = express();
 
 app.use(express.json());
+app.use(authentication);
 
 app.use('/forum', postRoutes);
 app.use('/account', userRoutes);
@@ -17,8 +19,12 @@ app.use((req, res) => res.status(404).type('text/plain; charset=utf-8').send('No
 );
 
 const connectDB = async () => {
-    await mongoose.connect(config.mongodb.uri, config.mongodb.db);
-    console.log('Connected to MongoDB');
+    try {
+        await mongoose.connect(config.mongodb.uri, config.mongodb.db);
+        console.log('Connected to MongoDB');
+    } catch (e) {
+        console.log('Failed to connect to database', e);
+    }
 }
 
 async function startServer() {
@@ -26,8 +32,4 @@ async function startServer() {
     app.listen(config.port, () => console.log(`Server running on port ${config.port}. Press Ctrl+C to stop.`));
 }
 
-startServer().catch(async (error) => {
-    console.error('Failed to start server: database connection failed', error);
-    await mongoose.disconnect();
-    process.exitCode = 1;
-});
+startServer();
