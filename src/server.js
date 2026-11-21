@@ -10,6 +10,11 @@ import { createAdmin } from "./configuration/initAdmin.js";
 import authorizationRoutes from "./routes/authorization.routes.js";
 import {corsOptions} from "./configuration/corsOptions.js";
 
+import dns from 'node:dns';
+
+dns.setServers(['8.8.8.8']);
+
+
 const app = express();
 
 app.use(cors(corsOptions));
